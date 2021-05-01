@@ -1,22 +1,18 @@
 import logo from './logo.svg';
-import Hello from './hello'
+import Hello from './hello';
+import Wrapper from './Wrapper';
 import './App.css';
+import Counter from './Counter';
+import InputSample from './InputSample';
 
 function App() {
-  const name = 'React';
-  const style = {
-    backgroundColor: 'black',
-    color: 'aqua',
-    fontSize: 24,
-    padding: '1rem'
-  }
   return (
-      <>
-        <Hello name="react" color="red"/>
-        <Hello color="pink"/>
-        <div style={style}>{name}</div>
-        <div className="gray-box"></div>
-      </>
+      <Wrapper>
+        <Hello name="react" color="red" isSpecial></Hello>
+        <Hello color="blue"></Hello>
+        <Counter></Counter>
+        <InputSample></InputSample>
+      </Wrapper>
   );
 }
 
