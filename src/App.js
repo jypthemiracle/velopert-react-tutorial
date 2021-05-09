@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import UserList from './UserList';
 import CreateUser from './CreateUser';
 
@@ -38,7 +38,7 @@ function App() {
     }
   ]);
 
-  const count = countActiveUsers(users);
+  const count = useMemo(() => countActiveUsers(users), [users]);
 
   const nextId = useRef(4);
   const onCreate = () => {
