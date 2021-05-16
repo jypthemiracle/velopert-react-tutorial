@@ -1,6 +1,7 @@
 import React, { useRef, useReducer, useMemo, useCallback } from 'react';
 import UserList from './UserList';
 import CreateUser from './CreateUser';
+import useInputs from './hooks/useInputs';
 
 function countActiveUsers(users) {
   console.log('활성 사용자 수를 세는중...');
@@ -8,58 +9,44 @@ function countActiveUsers(users) {
 }
 
 const initialState = {
-  inputs: {
-    username: '',
-    email: ''
-  },
   users: [
     {
       id: 1,
-      username: 'velopert',
-      email: 'public.velopert@gmail.com',
+      username: 'javajigi',
+      email: 'javajigi@gmail.com',
       active: true
     },
+
     {
       id: 2,
-      username: 'tester',
-      email: 'tester@example.com',
+      username: 'honux',
+      email: 'honux77@gmail.com',
       active: false
     },
+
     {
       id: 3,
-      username: 'liz',
-      email: 'liz@example.com',
+      username: 'crong',
+      email: 'crong@gmail.com',
       active: false
     }
   ]
-};
+}
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'CHANGE_INPUT':
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.name]: action.value
-          // name 키를 가진 값을 value 로 설정
-        }
-      };
     case 'CREATE_USER':
       return {
-        inputs: initialState.inputs,
         users: state.users.concat(action.user)
       };
     case 'TOGGLE_USER':
       return {
-        ...state,
         users: state.users.map(user =>
-          user.id === action.id ? { ...user, active: !user.active } : user
+          user.id === action.id ? {...user, active: !user.active} : user
         )
       };
     case 'REMOVE_USER':
       return {
-        ...state,
         users: state.users.filter(user => user.id !== action.id)
       };
     default:
@@ -68,23 +55,13 @@ function reducer(state, action) {
 }
 
 function App() {
+  const [{username, email}, onChange, reset] = useInputs({
+    username: '',
+    email: ''
+  });
   const [state, dispatch] = useReducer(reducer, initialState);
-  // 여기서 state 는 우리가 앞으로 컴포넌트에서 사용 할 수 있는 상태를 가르키게 되고, dispatch 는 액션을 발생시키는 함수라고 이해하시면 됩니다. 이 함수는 다음과 같이 사용합니다: dispatch({ type: 'INCREMENT' }).
-  // 그리고 useReducer 에 넣는 첫번째 파라미터는 reducer 함수이고, 두번째 파라미터는 초기 상태입니다.
-
   const nextId = useRef(4);
-
-  const { users } = state;
-  const { username, email } = state.inputs;
-
-  const onChange = useCallback(e => {
-    const { name, value } = e.target;
-    dispatch({
-      type: 'CHANGE_INPUT',
-      name,
-      value
-    });
-  }, []);
+  const {users} = state;
 
   const onCreate = useCallback(() => {
     dispatch({
@@ -95,8 +72,9 @@ function App() {
         email
       }
     });
+    reset();
     nextId.current += 1;
-  }, [username, email]);
+  }, [username, email, reset]);
 
   const onToggle = useCallback(id => {
     dispatch({
